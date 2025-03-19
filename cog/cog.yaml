@@ -1,0 +1,9 @@
+build:
+  python_version: "3.11"
+  python_packages:
+    - tensorflow==2.16.1
+    - numpy==1.26.4
+    - pandas==2.2.2
+    - scikit-learn==1.5.0
+  gpu: false
+predict: "predict.py:Predictor"
