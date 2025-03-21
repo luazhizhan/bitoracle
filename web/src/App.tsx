@@ -1,16 +1,28 @@
+import ViewPaperButton from "./components/ViewPaperButton";
+import HeroSVG from "./assets/hero.svg";
+
 function App() {
   return (
-    <main>
-      <header>
-        <h1>DefiFolio</h1>
+    <main className="w-full h-full flex flex-col justify-center items-center gap-8 py-4 px-4">
+      <header className="flex justify-between w-full max-w-[100rem]">
+        <h1 className="text-2xl font-semibold">DefiFolio</h1>
+        <ViewPaperButton />
       </header>
-      <div>
-        <h2>Automated Bitcoin Trading using Price Prediction from AI Model</h2>
-        <p>
+      <div className="flex flex-col items-center gap-6 px-2">
+        <h2 className="text-5xl font-bold text-center leading-snug">
+          Automated Bitcoin Trading using Price Prediction from{" "}
+          <span className="text-blue-400">AI Model</span>
+        </h2>
+        <p className="text-2xl font-normal text-gray-600 text-center">
           DefiFolio is a decentralised bitcoin AI Model that predict BTC price
           and trade automatically on your behalf.
         </p>
-        <button>Read the Paper</button>
+        <ViewPaperButton />
+        <img
+          className="w-full max-w-[70rem] h-auto"
+          src={HeroSVG}
+          alt="Hero Image"
+        />
       </div>
       <div>
         <h2>Performance</h2>
