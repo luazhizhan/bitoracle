@@ -1,4 +1,4 @@
-# Automated Bitcoin Trading dApp
+# DefiFolio Paper
 
 This paper discusses the development of an Automated Bitcoin Trading decentralized application (dApp) that utilizes price predictions generated from advanced deep learning models, specifically Random Forest (RF), Long Short-Term Memory (LSTM), and Bi-directional LSTM (Bi-LSTM).
 

@@ -10,7 +10,7 @@ export default function ViewPaperButton() {
       rel="noreferrer"
     >
       <MdiOpenInNew height={20} width={20} />
-      View Paper
+      View Publication
     </Link>
   );
 }

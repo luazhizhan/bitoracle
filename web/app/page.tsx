@@ -1,5 +1,5 @@
 import Image from "next/image";
-import ViewPaperButton from "./components/ViewPaperButton";
+import ViewPublicationButton from "./components/ViewPublicationButton";
 import PerformanceChart from "./components/PerformanceChart";
 import { MdiOpenInNew } from "./components/assets/MdiOpenInNew";
 import Link from "next/link";
@@ -12,7 +12,7 @@ export default async function Home() {
       {/* Header */}
       <header className="flex justify-between items-center w-full max-w-[100rem]">
         <h1 className="text-2xl font-semibold">DefiFolio</h1>
-        <ViewPaperButton />
+        <ViewPublicationButton />
       </header>
 
       {/* Hero Section */}
@@ -25,7 +25,7 @@ export default async function Home() {
           DefiFolio is a decentralised bitcoin AI Model that predict BTC price
           and trade automatically on your behalf.
         </p>
-        <ViewPaperButton />
+        <ViewPublicationButton />
         <Image
           className="w-full max-w-[60rem] h-auto"
           width={100}
@@ -163,7 +163,7 @@ export default async function Home() {
           className="mt-6 bg-blue-400 hover:bg-blue-500 text-white font-medium py-3 px-6 rounded-4xl transition-colors cursor-pointer flex items-center gap-2"
         >
           <MdiOpenInNew height={20} width={20} />
-          View Wallet
+          View Portfolio
         </Link>
       </div>
 
