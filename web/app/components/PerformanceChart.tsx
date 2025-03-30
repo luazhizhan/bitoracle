@@ -1,6 +1,9 @@
 "use client";
 
-import Chart from "react-apexcharts";
+// resolve window not defined error
+import dynamic from "next/dynamic";
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+
 import data from "./assets/performance.json";
 
 export default function PerformanceChart() {
