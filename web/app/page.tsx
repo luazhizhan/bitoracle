@@ -1,12 +1,94 @@
 import Image from "next/image";
+import Link from "next/link";
+import JSBI from "jsbi";
+import { unstable_cache } from "next/cache";
+
+import { ethers } from "ethers";
 import ViewPublicationButton from "./components/ViewPublicationButton";
 import PerformanceChart from "./components/PerformanceChart";
 import { MdiOpenInNew } from "./components/assets/MdiOpenInNew";
-import Link from "next/link";
+
+import { db } from "./utils/firebase";
+import { fetchBTCPrices } from "./utils/apis";
+import { tradeNumberToEnum, usdcDecimals, wbtcDecimals } from "./utils/helper";
+
+const getPageData = unstable_cache(
+  async () => {
+    // Fetch the latest 5 predictions and trades from Firestore
+    const predictionResults = await db
+      .collection("predictions")
+      .orderBy("timestamp", "desc")
+      .limit(5)
+      .get();
+    const { docs: predictionDocs } = predictionResults;
+
+    const actualPrices = await fetchBTCPrices();
+
+    let i = actualPrices.length - 1;
+    const predictions = predictionDocs.map((doc) => {
+      const { predictedPrice, timestamp } = doc.data();
+      const predictedBtcPrice = JSBI.BigInt(predictedPrice);
+      const formattedPredictedPrice = ethers.formatUnits(
+        predictedBtcPrice.toString(),
+        usdcDecimals
+      );
+      return {
+        actual: actualPrices[i--][1].toString(),
+        predicted: formattedPredictedPrice,
+        timestamp,
+        id: doc.id,
+      };
+    });
+
+    // Fetch the latest 5 trades from Firestore
+    const tradesResults = await db
+      .collection("account")
+      .doc(process.env.NEXT_PUBLIC_TRADING_ACCOUNT_ADDRESS || "")
+      .collection("trades")
+      .orderBy("timestamp", "desc")
+      .limit(5)
+      .get();
+    i = actualPrices.length - 1;
+    const trades = tradesResults.docs.map((doc) => {
+      const data = doc.data();
+      const formattedWbtcBalance = ethers.formatUnits(
+        JSBI.BigInt(data.wbtcBalance).toString(),
+        wbtcDecimals
+      );
+      const formattedUsdcBalance = ethers.formatUnits(
+        JSBI.BigInt(data.usdcBalance).toString(),
+        usdcDecimals
+      );
+      const totalBalance =
+        Number(formattedWbtcBalance) *
+          actualPrices[actualPrices.length - 1][1] +
+        Number(formattedUsdcBalance);
+      return {
+        balance: {
+          usdc: formattedUsdcBalance,
+          wbtc: formattedWbtcBalance,
+        },
+        totalBalanceInUSD: totalBalance.toString(),
+        trade: tradeNumberToEnum(data.trade).toString(),
+        timestamp: data.timestamp,
+        id: doc.id,
+      };
+    });
+
+    return {
+      predictions,
+      trades,
+    };
+  },
+  ["home"],
+  {
+    revalidate: 60 * 60 * 24, // 1 day
+  }
+);
 
 export default async function Home() {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/home`);
-  const { predictions, trades } = await response.json();
+  const { predictions, trades } = await getPageData();
+
   return (
     <main className="w-full h-full flex flex-col justify-center items-center gap-12 py-4 px-4">
       {/* Header */}
