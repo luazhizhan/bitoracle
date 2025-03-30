@@ -1,4 +1,6 @@
 *.keras
+*.pkl
 .cog
 __pycache__
-dataset.csv
+*.csv
+*.h5
