@@ -1,13 +1,16 @@
+import Image from "next/image";
 import ViewPaperButton from "./components/ViewPaperButton";
-import HeroSVG from "./assets/hero.svg";
+import PerformanceChart from "./components/PerformanceChart";
 
-function App() {
+export default function Home() {
   return (
     <main className="w-full h-full flex flex-col justify-center items-center gap-8 py-4 px-4">
       <header className="flex justify-between w-full max-w-[100rem]">
         <h1 className="text-2xl font-semibold">DefiFolio</h1>
         <ViewPaperButton />
       </header>
+
+      {/* Hero Section */}
       <div className="flex flex-col items-center gap-6 px-2">
         <h2 className="text-5xl font-bold text-center leading-snug">
           Automated Bitcoin Trading using Price Prediction from{" "}
@@ -18,19 +21,24 @@ function App() {
           and trade automatically on your behalf.
         </p>
         <ViewPaperButton />
-        <img
-          className="w-full max-w-[70rem] h-auto"
-          src={HeroSVG}
+        <Image
+          className="w-full max-w-[60rem] h-auto"
+          width={100}
+          height={100}
+          src="/hero.svg"
           alt="Hero Image"
         />
       </div>
-      <div>
-        <h2>Performance</h2>
-        <p>
+
+      <div className="flex flex-col gap-4 justify-center items-center px-2">
+        <h2 className="text-4xl font-bold">Performance</h2>
+        <p className="text-2xl font-normal text-gray-600 text-center">
           Our AI model outperforms Buy and Hold by over 60% on a $1,000 Bitcoin
           Investment over 2 years of backtesting.
         </p>
-        <button>See the performance</button>
+        <section className="w-full max-w-[80rem] h-full">
+          <PerformanceChart />
+        </section>
       </div>
       <div>
         <h2>Price prediction</h2>
@@ -83,5 +91,3 @@ function App() {
     </main>
   );
 }
-
-export default App;
