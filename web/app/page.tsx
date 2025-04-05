@@ -82,7 +82,7 @@ const getPageData = unstable_cache(
   },
   ["home"],
   {
-    revalidate: 60 * 60 * 24, // 1 day
+    revalidate: 60 * 60 * 6, // 6 hours
   }
 );
 
