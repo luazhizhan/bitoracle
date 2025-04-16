@@ -176,7 +176,9 @@ export default async function Home() {
 
       {/* Live Trading Portfolio */}
       <div className="flex flex-col gap-4 justify-center items-center px-2 w-full max-w-[80rem]">
-        <h2 className="text-4xl font-bold">Live Trading Portfolio</h2>
+        <h2 className="text-4xl font-bold text-center">
+          Live Trading Portfolio
+        </h2>
         <p className="text-2xl font-normal text-gray-600 text-center">
           We are running our model on our decentralised wallet at Arbitrium L2
           Blockchain to trade on a Uniswap V3 USDC/WBTC pool. Here are the daily
