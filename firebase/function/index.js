@@ -9,6 +9,7 @@ const erc20Abi = require("./abis/erc20.json");
 const { TickMath, FullMath, FeeAmount } = require("@uniswap/v3-sdk");
 const IUniswapV3Pool = require("@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json");
 const SwapRouter = require("@uniswap/v3-periphery/artifacts/contracts/SwapRouter.sol/SwapRouter.json");
+const TelegramBot = require("node-telegram-bot-api");
 
 fs.initializeApp();
 
@@ -23,6 +24,9 @@ const wbtcAddress = defineString("WBTC_ADDRESS");
 const usdcAddress = defineString("USDC_ADDRESS");
 const routerAddress = defineString("ROUTER_ADDRESS");
 const wbtcUsdcPoolAddress = defineString("WBTC_USDC_POOL_ADDRESS");
+
+const telegramApiToken = defineString("TELEGRAM_API_TOKEN");
+const telegramChatId = defineString("TELEGRAM_CHAT_ID");
 
 async function fetchYahooFinance(quote) {
   const response = await fetch(
@@ -57,6 +61,30 @@ function getTimeStamp() {
   today.setHours(today.getHours(), 0, 0, 0);
   const timestamp = Math.floor(today.getTime() / 1000);
   return timestamp;
+}
+
+function formatDateDDMMYYYY() {
+  const date = new Date();
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = monthNames[date.getMonth()];
+  const year = date.getFullYear();
+
+  return `${day} ${month} ${year}`;
 }
 
 async function fetchPredictedPrice(address, timestamp) {
@@ -335,6 +363,16 @@ exports.tradeScheduled = onSchedule(
           wbtcBalance: wbtcBalance.toString(),
           timestamp,
         });
+
+      // send telegram message
+      const bot = new TelegramBot(telegramApiToken.value(), { polling: true });
+      await bot.sendMessage(
+        telegramChatId.value(),
+        `Bitcoin Price Prediction (${formatDateDDMMYYYY()})\n\nPrediction: ${ethers.formatEther(
+          predictedBtcPrice.toString(),
+          wbtcDecimal
+        )}\nCurrent: ${ethers.formatEther(wbtcPrice.toString(), wbtcDecimal)}`
+      );
     } catch (error) {
       logger.error(error);
     }

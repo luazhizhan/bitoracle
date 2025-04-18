@@ -20,6 +20,7 @@
     "firebase-admin": "^12.1.0",
     "firebase-functions": "^5.0.0",
     "jsbi": "^4.3.0",
+    "node-telegram-bot-api": "^0.66.0",
     "replicate": "^0.30.2"
   },
   "devDependencies": {
