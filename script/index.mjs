@@ -1,5 +1,6 @@
 import TelegramBot from "node-telegram-bot-api";
 import dotenv from "dotenv";
+import { ethers } from "ethers";
 
 dotenv.config();
 
@@ -31,10 +32,11 @@ function formatDateDDMMMYYYY() {
 
 Promise.resolve().then(async () => {
   try {
-    const bot = new TelegramBot(TELEGRAM_API_TOKEN, {polling: true});
+    const bot = new TelegramBot(TELEGRAM_API_TOKEN, { polling: true });
     return bot.sendMessage(
       TELEGRAM_CHAT_ID,
-      `Bitcoin Price Prediction (${formatDateDDMMMYYYY()})\n\nPrediction: $82323.32\nCurrent: $82323.12`
+      `*${formatDateDDMMMYYYY()}* \nPrediction: $82323.32 \nCurrent: $82323.12`,
+      { parse_mode: "Markdown" }
     );
   } catch (error) {
     console.error("Error sending message:", error);

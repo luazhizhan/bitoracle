@@ -368,10 +368,12 @@ exports.tradeScheduled = onSchedule(
       const bot = new TelegramBot(telegramApiToken.value(), { polling: true });
       await bot.sendMessage(
         telegramChatId.value(),
-        `Bitcoin Price Prediction (${formatDateDDMMYYYY()})\n\nPrediction: ${ethers.formatEther(
-          predictedBtcPrice.toString(),
-          wbtcDecimal
-        )}\nCurrent: ${ethers.formatEther(wbtcPrice.toString(), wbtcDecimal)}`
+        `*${formatDateDDMMYYYY()}* \nPrediction: $${Number(
+          ethers.formatUnits(predictedBtcPrice.toString(), usdcDecimal)
+        ).toFixed(2)} \nCurrent: $${Number(
+          ethers.formatUnits(wbtcPrice.toString(), usdcDecimal)
+        ).toFixed(2)}`,
+        { parse_mode: "Markdown" }
       );
     } catch (error) {
       logger.error(error);
