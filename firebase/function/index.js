@@ -372,6 +372,8 @@ exports.tradeScheduled = onSchedule(
           ethers.formatUnits(predictedBtcPrice.toString(), usdcDecimal)
         ).toFixed(2)} \nCurrent: $${Number(
           ethers.formatUnits(wbtcPrice.toString(), usdcDecimal)
+        ).toFixed(2)} \nDiff: $${Number(
+          ethers.formatUnits(diff.toString(), usdcDecimal)
         ).toFixed(2)}`,
         { parse_mode: "Markdown" }
       );

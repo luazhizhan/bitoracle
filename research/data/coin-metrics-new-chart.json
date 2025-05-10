@@ -1,0 +1,194 @@
+{
+  "kind": "nc",
+  "name": "",
+  "content": {
+    "version": 7,
+    "config": {
+      "chartSettings": {
+        "interpolationType": 0,
+        "movingAvg": 0,
+        "scaleType": 0,
+        "stackMode": "none"
+      },
+      "selections": {
+        "assets": [],
+        "metrics": [],
+        "pairs": [
+          {
+            "asset": "btc",
+            "metric": "AdrBal1in100KCnt",
+            "id": "btc.AdrBal1in100KCnt",
+            "isInChart": true,
+            "color": "#DE333C"
+          },
+          {
+            "asset": "btc",
+            "metric": "AdrActCnt",
+            "id": "btc.AdrActCnt",
+            "isInChart": true,
+            "color": "#A8DC5C"
+          },
+          {
+            "asset": "btc",
+            "metric": "FlowOutExUSD",
+            "id": "btc.FlowOutExUSD",
+            "isInChart": true,
+            "color": "#25A3DA"
+          },
+          {
+            "asset": "btc",
+            "metric": "FlowInExUSD",
+            "id": "btc.FlowInExUSD",
+            "isInChart": true,
+            "color": "#F9951D"
+          },
+          {
+            "asset": "btc",
+            "metric": "CapMVRVFF",
+            "id": "btc.CapMVRVFF",
+            "isInChart": true,
+            "color": "#C6CB31"
+          },
+          {
+            "asset": "btc",
+            "metric": "CapMrktCurUSD",
+            "id": "btc.CapMrktCurUSD",
+            "isInChart": true,
+            "color": "#C370D1"
+          },
+          {
+            "asset": "btc",
+            "metric": "BlkSizeMeanByte",
+            "id": "btc.BlkSizeMeanByte",
+            "isInChart": true,
+            "color": "#00B3BE"
+          },
+          {
+            "asset": "btc",
+            "metric": "DiffLast",
+            "id": "btc.DiffLast",
+            "isInChart": true,
+            "color": "#AC7A67"
+          },
+          {
+            "asset": "btc",
+            "metric": "SplyMiner0HopAllUSD",
+            "id": "btc.SplyMiner0HopAllUSD",
+            "isInChart": true,
+            "color": "#EE5DBE"
+          },
+          {
+            "asset": "btc",
+            "metric": "RevUSD",
+            "id": "btc.RevUSD",
+            "isInChart": true,
+            "color": "#B90009"
+          },
+          {
+            "asset": "btc",
+            "metric": "FeeTotUSD",
+            "id": "btc.FeeTotUSD",
+            "isInChart": true,
+            "color": "#63B22D"
+          }
+        ]
+      }
+    },
+    "extra": {
+      "chartOptions": {
+        "chartType": "line",
+        "scaleType": 0,
+        "stackMode": "none",
+        "movingAvg": 0,
+        "interpolationType": 0,
+        "zoomRange": [
+          1230940800000,
+          1745020800000
+        ],
+        "data": {
+          "type": "formula",
+          "initialData": [
+            {
+              "name": "BTC / Addr Cnt with ≥ .001% Supply",
+              "code": "BTC.AdrBal1in100KCnt",
+              "color": "#DE333C",
+              "displayMode": "left",
+              "lineWidth": 1
+            },
+            {
+              "name": "BTC / Active Addr Cnt",
+              "code": "BTC.AdrActCnt",
+              "color": "#A8DC5C",
+              "displayMode": "left",
+              "lineWidth": 1
+            },
+            {
+              "name": "BTC / Exchange Withdrawals (USD)",
+              "code": "BTC.FlowOutExUSD",
+              "color": "#25A3DA",
+              "displayMode": "left",
+              "lineWidth": 1
+            },
+            {
+              "name": "BTC / Exchange Deposits (USD)",
+              "code": "BTC.FlowInExUSD",
+              "color": "#F9951D",
+              "displayMode": "left",
+              "lineWidth": 1
+            },
+            {
+              "name": "BTC / Free Float MVRV (Free Float Market Cap / Realized Market Cap)",
+              "code": "BTC.CapMVRVFF",
+              "color": "#C6CB31",
+              "displayMode": "left",
+              "lineWidth": 1
+            },
+            {
+              "name": "BTC / Market Cap (USD)",
+              "code": "BTC.CapMrktCurUSD",
+              "color": "#C370D1",
+              "displayMode": "left",
+              "lineWidth": 1
+            },
+            {
+              "name": "BTC / Mean Block Size (in bytes)",
+              "code": "BTC.BlkSizeMeanByte",
+              "color": "#00B3BE",
+              "displayMode": "left",
+              "lineWidth": 1
+            },
+            {
+              "name": "BTC / Difficulty",
+              "code": "BTC.DiffLast",
+              "color": "#AC7A67",
+              "displayMode": "left",
+              "lineWidth": 1
+            },
+            {
+              "name": "BTC / Miner Supply (USD)",
+              "code": "BTC.SplyMiner0HopAllUSD",
+              "color": "#EE5DBE",
+              "displayMode": "left",
+              "lineWidth": 1
+            },
+            {
+              "name": "BTC / Miner Revenue (USD)",
+              "code": "BTC.RevUSD",
+              "color": "#B90009",
+              "displayMode": "left",
+              "lineWidth": 1
+            },
+            {
+              "name": "BTC / Total Fees (USD)",
+              "code": "BTC.FeeTotUSD",
+              "color": "#63B22D",
+              "displayMode": "left",
+              "lineWidth": 1
+            }
+          ]
+        },
+        "last": null
+      }
+    }
+  }
+}
