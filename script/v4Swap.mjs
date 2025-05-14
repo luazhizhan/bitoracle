@@ -132,7 +132,6 @@ function SwapComponent() {
         [actions, params]
       ),
     ];
-    const deadline = Math.floor(Date.now() / 1000) + 60 * 5; // 5-minute expiry
 
     console.log({ commands, inputs });
 

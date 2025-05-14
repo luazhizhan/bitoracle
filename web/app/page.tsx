@@ -82,7 +82,7 @@ const getPageData = unstable_cache(
   },
   ["home"],
   {
-    revalidate: 60 * 60 * 6, // 6 hours
+    revalidate: 60 * 60, // 1 hours
   }
 );
 
@@ -93,7 +93,7 @@ export default async function Home() {
     <main className="w-full h-full flex flex-col justify-center items-center gap-12 py-4 px-4">
       {/* Header */}
       <header className="flex justify-between items-center w-full max-w-[100rem]">
-        <h1 className="text-2xl font-semibold">DefiFolio</h1>
+        <h1 className="text-2xl font-semibold">BitOracle</h1>
         <ViewPublicationButton />
       </header>
 
@@ -104,8 +104,8 @@ export default async function Home() {
           <span className="text-blue-400">AI Model</span>
         </h2>
         <p className="text-2xl font-normal text-gray-600 text-center">
-          DefiFolio is a decentralised bitcoin AI Model that predict BTC price
-          and trade automatically on your behalf.
+          BitOracle is a decentralised bitcoin AI Model that predict BTC price
+          and trade automatically.
         </p>
         <ViewPublicationButton />
         <Image
@@ -255,10 +255,10 @@ export default async function Home() {
       <footer className="w-full max-w-[80rem] mt-8 py-6 px-4 border-t border-gray-200">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center">
-            <h3 className="text-xl font-semibold">DefiFolio</h3>
+            <h3 className="text-xl font-semibold">BitOracle</h3>
           </div>
           <p className="text-gray-600">
-            © 2025 DefiFolio. All rights reserved.
+            © 2025 BitOracle. All rights reserved.
           </p>
         </div>
       </footer>

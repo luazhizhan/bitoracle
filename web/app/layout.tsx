@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DefiFolio — Decentralized. Intelligent. Secure",
+  title: "BitOracle",
   description:
-    "DefiFolio is a trading agent that helps you to manage your DeFi portfolio. It is decentralized, intelligent, and secure.",
+    "BitOracle provides daily Bitcoin price predictions using machine learning deep learning models.",
 };
 
 export default function RootLayout({

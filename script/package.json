@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.mjs"
+    "telegram": "node telegram.mjs",
+    "crypto": "node crypto.mjs"
   },
   "type": "module",
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@uniswap/v3-sdk": "^3.25.2",
     "dotenv": "^16.5.0",
     "ethers": "^6.13.5",
     "jsbi": "^4.3.2",

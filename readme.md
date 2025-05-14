@@ -1,6 +1,6 @@
-# DefiFolio Paper
+# BitOracle
 
-This paper discusses the development of an Automated Bitcoin Trading decentralized application (dApp) that utilizes price predictions generated from advanced deep learning models, specifically Random Forest (RF), Long Short-Term Memory (LSTM), and Bi-directional LSTM (Bi-LSTM).
+The paper discusses the development of an Automated Bitcoin Trading decentralized application (dApp) that utilizes price predictions generated from advanced deep learning models, specifically Random Forest (RF), Long Short-Term Memory (LSTM), and Bi-directional LSTM (Bi-LSTM).
 
 The model achieved an impressive 488.74% return on investment (ROI), significantly outperforming buy and hold strategy while ensuring transparency and automation throughout the trading process.
 
