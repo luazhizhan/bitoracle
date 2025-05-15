@@ -8,6 +8,8 @@ const Replicate = require("replicate");
 const logger = require("firebase-functions/logger");
 const TelegramBot = require("node-telegram-bot-api");
 
+fs.initializeApp();
+
 //#region environment variables
 const httpURL = defineString("HTTP_URL");
 const replicateModel = defineString("REPLICATE_MODEL");
