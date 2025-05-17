@@ -22,6 +22,8 @@ const universalRouterAddress = defineString("UNIVERSAL_ROUTER_ADDRESS");
 const poolId = defineString("POOL_ID");
 const stateViewAddress = defineString("STATEVIEW_ADDRESS");
 const permit2Address = defineString("PERMIT2_ADDRESS");
+const telegramApiToken = defineString("TELEGRAM_API_TOKEN");
+const telegramChatId = defineString("TELEGRAM_CHAT_ID");
 // #endregion
 
 //#region datetime functions
@@ -386,11 +388,6 @@ exports.tradeScheduled = onSchedule(
         wbtcPrice.toString()
       );
 
-      const diff = JSBI.subtract(predictedBtcPrice, wbtcPrice);
-      const five = JSBI.BigInt(5 * 10 ** usdcDecimal);
-      const nFive = JSBI.BigInt(-5 * 10 ** usdcDecimal);
-      const formattedDiff = ethers.formatUnits(diff.toString(), usdcDecimal);
-
       const usdcContract = new ethers.Contract(
         usdcAddress.value(),
         ERC20_ABI,
@@ -401,6 +398,15 @@ exports.tradeScheduled = onSchedule(
         ERC20_ABI,
         provider
       );
+
+      const usdcDecimal = await usdcContract.decimals();
+      const wbtcDecimal = await wbtcContract.decimals();
+
+      const diff = JSBI.subtract(predictedBtcPrice, wbtcPrice);
+      const five = JSBI.BigInt(5 * 10 ** usdcDecimal);
+      const nFive = JSBI.BigInt(-5 * 10 ** usdcDecimal);
+      const formattedDiff = ethers.formatUnits(diff.toString(), usdcDecimal);
+
       let usdcBalance = await usdcContract.balanceOf(signer.address);
       let wbtcBalance = await wbtcContract.balanceOf(signer.address);
       let formattedUSDCBalance = ethers.formatUnits(usdcBalance, usdcDecimal);
