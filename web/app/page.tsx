@@ -7,7 +7,6 @@ import ViewPublicationButton from "./components/ViewPublicationButton";
 import PerformanceChart from "./components/PerformanceChart";
 
 import { db } from "./utils/firebase";
-import { fetchBTCPrices } from "./utils/apis";
 import { usdcDecimals } from "./utils/helper";
 
 const getPageData = unstable_cache(
@@ -20,10 +19,7 @@ const getPageData = unstable_cache(
       .get();
     const { docs: predictionDocs } = predictionResults;
 
-    const actualPrices = await fetchBTCPrices();
-
-    let i = actualPrices.length - 1;
-    const predictions = predictionDocs.map((doc: any) => {
+    const predictions = predictionDocs.map((doc) => {
       const { predictedPrice, btcOpen, timestamp } = doc.data();
       const predictedBtcPrice = JSBI.BigInt(predictedPrice);
       const formattedPredictedPrice = ethers.formatUnits(
