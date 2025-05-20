@@ -2,6 +2,7 @@ const { onSchedule } = require("firebase-functions/v2/scheduler");
 const { defineString } = require("firebase-functions/params");
 const fs = require("firebase-admin");
 const JSBI = require("jsbi");
+const { TickMath, FullMath, FeeAmount } = require("@uniswap/v3-sdk");
 const { ethers } = require("ethers");
 const Replicate = require("replicate");
 const logger = require("firebase-functions/logger");
@@ -12,6 +13,13 @@ fs.initializeApp();
 //#region environment variables
 const replicateModel = defineString("REPLICATE_MODEL");
 const replicateApiToken = defineString("REPLICATE_API_TOKEN");
+
+const httpURL = defineString("HTTP_URL");
+const poolId = defineString("POOL_ID");
+const wbtcAddress = defineString("WBTC_ADDRESS");
+const usdcAddress = defineString("USDC_ADDRESS");
+const stateViewAddress = defineString("STATEVIEW_ADDRESS");
+
 const telegramApiToken = defineString("TELEGRAM_API_TOKEN");
 const telegramChatId = defineString("TELEGRAM_CHAT_ID");
 // #endregion
@@ -58,7 +66,7 @@ function formattedDate() {
 //#region external data
 async function fetchYahooFinance(quote) {
   const response = await fetch(
-    `https://query1.finance.yahoo.com/v8/finance/chart/${quote}?interval=1d`
+    `https://query1.finance.yahoo.com/v8/finance/chart/${quote}?interval=1m`
   );
   const data = await response.json();
   return data.chart.result[0].meta.regularMarketPrice;
@@ -80,17 +88,12 @@ async function fetchCryptoMarketCap() {
   const data = await response.json();
   return Number(data.data.total_market_cap.btc);
 }
-async function currentAndPredictedBtcPrice(timestamp) {
+async function fetchPredictedPrice() {
+  const timestamp = getTimeStamp();
   const predictionsCollectionDoc = fs
     .firestore()
     .collection("predictions")
     .doc(timestamp.toString());
-  const predictionDoc = await predictionsCollectionDoc.get();
-  if (predictionDoc.exists) {
-    const data = predictionDoc.data();
-    logger.info("Using cached prediction", data.predictedPrice);
-    return data.predictedPrice;
-  }
   const replicate = new Replicate({
     auth: replicateApiToken.value(),
   });
@@ -158,7 +161,6 @@ async function currentAndPredictedBtcPrice(timestamp) {
       solOpenPrice,
     },
   });
-  logger.info("Predicted btc price is", output);
   await predictionsCollectionDoc.set({
     predictedPrice: output,
     btcOpen,
@@ -192,9 +194,45 @@ async function currentAndPredictedBtcPrice(timestamp) {
     solOpenPrice,
     timestamp,
   });
-  return [btcOpen, output];
+  return output;
 }
 // #endregion
+
+//#region smart contract functions
+const STATEVIEW_ABI = [
+  "function getSlot0(bytes32 poolId) external view returns (uint160 sqrtPriceX96, int24 tick, uint24 protocolFee, uint24 lpFee)",
+];
+const ERC20_ABI = [
+  "function approve(address spender, uint256 amount) external returns (bool)",
+  "function balanceOf(address account) external view returns (uint256)",
+  "function decimals() external view returns (uint8)",
+];
+
+async function fetchWbtcPrice() {
+  const provider = new ethers.JsonRpcProvider(httpURL.value());
+
+  const stateViewContract = new ethers.Contract(
+    stateViewAddress.value(),
+    STATEVIEW_ABI,
+    provider
+  );
+  const tokenContract = new ethers.Contract(
+    wbtcAddress.value(),
+    ERC20_ABI,
+    provider
+  );
+  const decimals = await tokenContract.decimals();
+
+  const slot0 = await stateViewContract.getSlot0(poolId.value());
+  const sqrtRatioX96 = TickMath.getSqrtRatioAtTick(Number(slot0[1]));
+  const ratioX192 = JSBI.multiply(sqrtRatioX96, sqrtRatioX96);
+  const baseAmount = JSBI.BigInt(1 * 10 ** Number(decimals)); // 1 WBTC
+  const shift = JSBI.leftShift(JSBI.BigInt(1), JSBI.BigInt(192));
+  const quoteAmount = FullMath.mulDivRoundingUp(ratioX192, baseAmount, shift);
+  return quoteAmount;
+}
+
+//#endregion
 
 exports.btcPricePrediction = onSchedule(
   {
@@ -207,23 +245,41 @@ exports.btcPricePrediction = onSchedule(
   },
   async (_) => {
     try {
-      const timestamp = getTimeStamp();
-      const [current, predicted] = await currentAndPredictedBtcPrice(timestamp);
-      const currentBtcPrice = JSBI.BigInt(Number(current));
-      const predictedBtcPrice = JSBI.BigInt(
-        Number(ethers.formatUnits(predicted.toString(), 6)) // usdc has 6 decimals
+      // setup blockchain stuff
+      const provider = new ethers.JsonRpcProvider(httpURL.value());
+
+      // get wbtc and predicted prices
+      const output = await fetchPredictedPrice();
+      const predictedBtcPrice = JSBI.BigInt(output);
+      const wbtcPrice = await fetchWbtcPrice();
+
+      logger.info(
+        "Predicted BTC Price:",
+        predictedBtcPrice.toString(),
+        "WBTC Price:",
+        wbtcPrice.toString()
       );
-      const diff = JSBI.subtract(predictedBtcPrice, currentBtcPrice);
+
+      const usdcContract = new ethers.Contract(
+        usdcAddress.value(),
+        ERC20_ABI,
+        provider
+      );
+
+      const usdcDecimal = await usdcContract.decimals();
+      const diff = JSBI.subtract(predictedBtcPrice, wbtcPrice);
 
       // send telegram message
       const bot = new TelegramBot(telegramApiToken.value(), { polling: true });
       await bot.sendMessage(
         telegramChatId.value(),
         `*${formattedDate()}* \nPrediction: $${Number(
-          predictedBtcPrice.toString()
-        ).toFixed(2)} \nCurrent: $${Number(currentBtcPrice.toString()).toFixed(
-          2
-        )} \nDiff: $${Number(diff.toString()).toFixed(2)}`,
+          ethers.formatUnits(predictedBtcPrice.toString(), usdcDecimal)
+        ).toFixed(2)} \nCurrent: $${Number(
+          ethers.formatUnits(wbtcPrice.toString(), usdcDecimal)
+        ).toFixed(2)} \nDiff: $${Number(
+          ethers.formatUnits(diff.toString(), usdcDecimal)
+        ).toFixed(2)}`,
         { parse_mode: "Markdown" }
       );
     } catch (error) {
