@@ -33,33 +33,31 @@ function getTimeStamp() {
 
 function formattedDate() {
   const date = new Date();
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
 
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = monthNames[date.getMonth()];
-  const year = date.getFullYear();
+  // Convert to Singapore timezone (UTC+8)
+  const options = {
+    timeZone: "Asia/Singapore",
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  };
 
-  let hours = date.getHours();
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12;
-  hours = hours ? hours : 12; // the hour '0' should be '12'
-  hours = String(hours).padStart(2, "0");
+  // Format using Intl.DateTimeFormat
+  const formatter = new Intl.DateTimeFormat("en-US", options);
+  // The formatted string will be like "06 Jun 2024, 09:30 AM"
+  // Let's rearrange to match the original format: "06 Jun 2024 09:30 AM"
+  const parts = formatter.formatToParts(date);
+  const day = parts.find((p) => p.type === "day").value;
+  const month = parts.find((p) => p.type === "month").value;
+  const year = parts.find((p) => p.type === "year").value;
+  const hour = parts.find((p) => p.type === "hour").value;
+  const minute = parts.find((p) => p.type === "minute").value;
+  const dayPeriod = parts.find((p) => p.type === "dayPeriod").value;
 
-  return `${day} ${month} ${year} ${hours}:${minutes} ${ampm}`;
+  return `${day} ${month} ${year} ${hour}:${minute} ${dayPeriod}`;
 }
 //#endregion
 
@@ -236,7 +234,7 @@ async function fetchWbtcPrice() {
 
 exports.btcPricePrediction = onSchedule(
   {
-    schedule: "every 4 hours",
+    schedule: "every 1 hours",
     timeZone: "Asia/Singapore",
     timeoutSeconds: 180,
     memory: "256MiB",
